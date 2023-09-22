@@ -11,7 +11,7 @@ const elements = {
   btnFin: document.querySelector('.pag-forward-btn'),
 };
 
-const pages = 7; //кількість сторінок
+const pages = 8; //кількість сторінок
 let quantMobbtn = 3; // кількість кнопок сторінок в моб варіанті
 
 let currentPage = 1; //поточна сторінка
