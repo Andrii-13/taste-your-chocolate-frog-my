@@ -121,46 +121,38 @@ function handlerBattonPag(e) {
   if (e.target === currentActiveBtn) {
     return;
   }
-
-  // спінер
   loader.classList.remove('hidden');
 
   if (currentActiveBtn) {
     currentActiveBtn.classList.remove('btn-active');
   }
-  // задаємо умову, щоб цифри на кнопках переміщались на 1 коли нажимає на крайню, також враховуючи що на граничних кнопках треба зупинитись
+// задаємо умову, щоб кнопки переходили на +1
   if (e.target) {
     e.target.classList.add('btn-active');
-
-    // переміщаємось вперед
     if (
       !e.target.nextSibling &&
       Number(e.currentTarget.lastChild.textContent) !== pages
     ) {
-      console.log( Number(e.target.textContent));
+      console.dir(e.currentTarget.lastChild.textContent);
       elements.btnsPagesBox.innerHTML = btnPageMarkupFront(
         Number(e.target.textContent),
         pages
       );
     }
 
-    // переміщаємось назад
-    if (
-      !e.target.previousSibling &&
-      Number(e.currentTarget.firstChild.textContent) !== 1
-    ) {
-      elements.btnsPagesBox.innerHTML = btnPageMarkupBack(
-        Number(e.target.textContent),
-        pages
-      );
-    }
+    // if (!e.target.previousSibling) {
+    //     console.log(currentActiveBtn.textContent);
+    //   elements.btnsPagesBox.innerHTML = btnPageMarkupBack(
+    //     Number(e.target.textContent),
+    //     pages
+    //   );
+    // }
 
     currentPage = Number(e.target.textContent);
     //console.dir(Number(e.target.textContent));
 
     // зміна розмітки
     defaultDataTest(currentPage, currentlimit);
-
     // з цього отримується номер сторінки, вставити функцію розмітки сторінки
   }
 }
@@ -220,10 +212,11 @@ function handlerBattonArrow(e) {
 
       if (
         Number(currentActiveBtn.textContent) ===
-          Number(elements.btnsPagesBox.lastChild.textContent) - 1 &&
-        Number(elements.btnsPagesBox.lastChild.textContent) + 1 <= pages
+        Number(elements.btnsPagesBox.lastChild.textContent) - 1
       ) {
-        elements.btnsPagesBox.innerHTML = btnPageMarkupFront();
+        if (Number(elements.btnsPagesBox.lastChild.textContent) + 1 <= pages) {
+          elements.btnsPagesBox.innerHTML = btnPageMarkupFront();
+        }
       }
     }
   }
@@ -285,8 +278,8 @@ function btnPageMarkupFront() {
   const arrBtn = [];
   if (!nextElem) {
     for (
-      let i = Number(currentActiveBtn.textContent) - quantMobbtn;
-      i <= Number(currentActiveBtn.textContent);
+      let i = Number(currentActiveBtn.textContent) + 1 - quantMobbtn + 1;
+      i <= Number(currentActiveBtn.textContent) + 1;
       i += 1
     ) {
       if (i === Number(currentActiveBtn.textContent)) {
