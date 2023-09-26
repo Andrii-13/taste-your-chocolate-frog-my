@@ -126,34 +126,30 @@ function handlerBattonPag(e) {
   if (currentActiveBtn) {
     currentActiveBtn.classList.remove('btn-active');
   }
-// задаємо умову, щоб кнопки переходили на +1
+  // задаємо умову, щоб кнопки переходили на +1
   if (e.target) {
     e.target.classList.add('btn-active');
     if (
       !e.target.nextSibling &&
       Number(e.currentTarget.lastChild.textContent) !== pages
     ) {
-      console.dir(e.currentTarget.lastChild.textContent);
       elements.btnsPagesBox.innerHTML = btnPageMarkupFront(
         Number(e.target.textContent),
         pages
       );
     }
-
-    // if (!e.target.previousSibling) {
-    //     console.log(currentActiveBtn.textContent);
-    //   elements.btnsPagesBox.innerHTML = btnPageMarkupBack(
-    //     Number(e.target.textContent),
-    //     pages
-    //   );
-    // }
+    // задаємо умову, щоб кнопки переходили на -1
+    if (
+      Number(e.currentTarget.firstChild.textContent) ===
+        Number(e.target.textContent) &&
+      Number(e.target.textContent) !== 1
+    ) {
+      elements.btnsPagesBox.innerHTML = btnPageMarkupBack();
+    }
 
     currentPage = Number(e.target.textContent);
-    //console.dir(Number(e.target.textContent));
 
-    // зміна розмітки
     defaultDataTest(currentPage, currentlimit);
-    // з цього отримується номер сторінки, вставити функцію розмітки сторінки
   }
 }
 
