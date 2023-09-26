@@ -6,20 +6,14 @@ import {
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { debounce } from 'debounce';
 import { createMarkupGridCard, defaultData } from './grid-card-fetch';
+import { quantityBtn, markupBtnPagination } from './pagination';
 import SlimSelect from 'slim-select';
-// import 'slim-select/dist/slimselect.css';
+import { elements } from './refs';
 
 let currentlimit = 6;
 const loader = document.querySelector('.loader');
 
-const elements = {
-  cards: document.querySelector('.list-recipes'),
-  searchInput: document.querySelector('.filter-search'),
-  resetButton: document.querySelector('.js-reset-filters'),
-  selectTimeButton: document.querySelector('#time-select'),
-  selectAreaButton: document.querySelector('#area-select'),
-  selectIngredientsButton: document.querySelector('#ingredients-select'),
-};
+const arrResipesOnPage = []; // масив з рецептами по сторінках
 
 if (elements.searchInput) {
   elements.searchInput.addEventListener(
@@ -37,6 +31,7 @@ function getQueryNameRecipes(e) {
     elements.cards.innerHTML = defaultData(); // якщо написав і стер то вертається дефолтна розмітка
     elements.resetButton.classList.add('js-reset-filters');
     Notify.info('Your query is empty. Please try again');
+    quantityBtn(currentlimit);
     return;
   }
   //console.dir(elements.resetButton);
@@ -53,6 +48,7 @@ function clearSearchInput(e) {
     elements.searchInput.value = '';
     elements.cards.innerHTML = defaultData();
     elements.resetButton.classList.add('js-reset-filters');
+    quantityBtn(currentlimit);
   }
 }
 
@@ -69,7 +65,7 @@ async function cardsWithFiltersData(nameRecipe, currentlimit) {
     const filterRecipes = result.filter(({ title }) =>
       title.toLowerCase().includes(nameRecipe.toLowerCase())
     );
-    //console.log(filterRecipes);
+    // console.log(filterRecipes);
 
     if (filterRecipes.length === 0) {
       elements.cards.innerHTML = defaultData();
@@ -77,28 +73,49 @@ async function cardsWithFiltersData(nameRecipe, currentlimit) {
       Notify.warning('Nothing was found for your request!');
       return;
     }
+    //##########################################################################
 
-    const recipesOnPage = filterRecipes.splice(0, currentlimit);
-    //console.log(currentlimit);
+    const filterRecipesDouble = filterRecipes.slice();
+    if (elements.searchInput.value !== '') {
+      console.dir(elements.searchInput.value);
 
-    // console.log(Math.ceil(filterRecipes.length/currentlimit));
+      for (
+        let i = 0;
+        i < Math.ceil(filterRecipesDouble.length / currentlimit);
+        i += 1
+      ) {
+        arrResipesOnPage.push(filterRecipes.splice(0, currentlimit));
+      }
 
-    // при реалізації пагінації можна опрацьювати filterRecipes після splice
+      elements.cards.innerHTML = createMarkupGridCard(arrResipesOnPage[0]);
+      
+      
+      
+      
+      // створення логіки натискань на кнопки сторінок при виборі рецепта по інпуту
 
-    elements.cards.innerHTML = createMarkupGridCard(recipesOnPage);
+      
+      
+      // ++++++++++++++++++  рендер кнопок по факту сторінок
+
+      // при вводі в інпут і стиранні не зявляються стрілочні кнопки.
+
+      elements.btnsPagesBox.innerHTML = markupBtnPagination(
+        arrResipesOnPage.length
+      );
+
+      
+
+  
+    }
   } catch {
     Notify.failure('Oops! Something went wrong! Try reloading the page!');
   }
 }
 
-// selectClass.forEach(item => {
-// new SlimSelect({
-//   select: elements.allFilters,
-//   settings: {
-//     showSearch: false,
-//   },
-// });
-// });
+function handlerBattonPagSearch(e){
+console.log(e.target.textContent);
+}
 
 /*
 ====================

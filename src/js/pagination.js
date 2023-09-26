@@ -1,17 +1,11 @@
 import { fetchCards } from './API/grid-cards-api';
 import { createMarkupGridCard } from './grid-card-fetch';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { elements } from './refs';
 // import {getQueryNameRecipes} from './filters-fetch';
 // import { debounce } from 'debounce';
 
 const loader = document.querySelector('.loader');
-const elements = {
-  btnsPagesBox: document.querySelector('.js-btns-pages'),
-  pagWrap: document.querySelector('.js-pag-wrap'),
-  btnsBack: document.querySelector('.btns-back'),
-  btnsEnd: document.querySelector('.btns-forward'),
-  btnFin: document.querySelector('.pag-forward-btn'),
-};
 
 let pages = 8; //кількість сторінок
 let quantMobbtn = 3; // кількість кнопок сторінок в моб варіанті
@@ -313,3 +307,10 @@ function markupEndBattons(quantityPages) {
   const endSetPages = arrBtn.join('');
   return endSetPages;
 }
+
+// ======================================
+// pagination button for search
+// ========================================
+
+
+export{quantityBtn, markupBtnPagination};
