@@ -30,6 +30,10 @@ function setCardsLimitTest() {
     currentlimit = 9;
     quantMobbtn = 4;
     defaultDataTest(currentPage, currentlimit);
+  } else {
+    currentlimit = 6;
+    quantMobbtn = 3;
+    defaultDataTest(currentPage, currentlimit);
   }
   setCardsLimitResizerTest();
 }
@@ -111,20 +115,52 @@ function handlerBattonPag(e) {
   if (e.target.nodeName !== 'BUTTON') {
     return;
   }
-  loader.classList.remove('hidden');
+
   const currentActiveBtn = document.querySelector('.btn-active');
+  // якщо нажимаємо на активну кнопку то не робить запиту на бєк, а пририває функцію
+  if (e.target === currentActiveBtn) {
+    return;
+  }
+
+  // спінер
+  loader.classList.remove('hidden');
 
   if (currentActiveBtn) {
     currentActiveBtn.classList.remove('btn-active');
   }
-
+  // задаємо умову, щоб цифри на кнопках переміщались на 1 коли нажимає на крайню, також враховуючи що на граничних кнопках треба зупинитись
   if (e.target) {
     e.target.classList.add('btn-active');
+
+    // переміщаємось вперед
+    if (
+      !e.target.nextSibling &&
+      Number(e.currentTarget.lastChild.textContent) !== pages
+    ) {
+      console.log( Number(e.target.textContent));
+      elements.btnsPagesBox.innerHTML = btnPageMarkupFront(
+        Number(e.target.textContent),
+        pages
+      );
+    }
+
+    // переміщаємось назад
+    if (
+      !e.target.previousSibling &&
+      Number(e.currentTarget.firstChild.textContent) !== 1
+    ) {
+      elements.btnsPagesBox.innerHTML = btnPageMarkupBack(
+        Number(e.target.textContent),
+        pages
+      );
+    }
+
     currentPage = Number(e.target.textContent);
     //console.dir(Number(e.target.textContent));
 
     // зміна розмітки
     defaultDataTest(currentPage, currentlimit);
+
     // з цього отримується номер сторінки, вставити функцію розмітки сторінки
   }
 }
@@ -184,11 +220,10 @@ function handlerBattonArrow(e) {
 
       if (
         Number(currentActiveBtn.textContent) ===
-        Number(elements.btnsPagesBox.lastChild.textContent) - 1
+          Number(elements.btnsPagesBox.lastChild.textContent) - 1 &&
+        Number(elements.btnsPagesBox.lastChild.textContent) + 1 <= pages
       ) {
-        if (Number(elements.btnsPagesBox.lastChild.textContent) + 1 <= pages) {
-          elements.btnsPagesBox.innerHTML = btnPageMarkupFront();
-        }
+        elements.btnsPagesBox.innerHTML = btnPageMarkupFront();
       }
     }
   }
@@ -205,8 +240,6 @@ function handlerBattonArrow(e) {
       const choosePage = Number(currentActiveBtn.textContent) - 1;
       defaultDataTest(choosePage, currentlimit);
 
-      //console.log(elements.btnsPagesBox.firstChild.textContent);
-      //console.log(currentActiveBtn.previousSibling.textContent);
       if (Number(elements.btnsPagesBox.firstChild.textContent) - 1 > 0) {
         if (
           Number(elements.btnsPagesBox.firstChild.textContent) ===
@@ -252,8 +285,8 @@ function btnPageMarkupFront() {
   const arrBtn = [];
   if (!nextElem) {
     for (
-      let i = Number(currentActiveBtn.textContent) + 1 - quantMobbtn + 1;
-      i <= Number(currentActiveBtn.textContent) + 1;
+      let i = Number(currentActiveBtn.textContent) - quantMobbtn;
+      i <= Number(currentActiveBtn.textContent);
       i += 1
     ) {
       if (i === Number(currentActiveBtn.textContent)) {
