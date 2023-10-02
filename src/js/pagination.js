@@ -313,4 +313,5 @@ function markupEndBattons(quantityPages) {
 // ========================================
 
 
+
 export{quantityBtn, markupBtnPagination};
