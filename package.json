@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/taste-your-chocolate-frog/",
+    "build": "vite build --base=/taste-your-chocolate-frog-my/",
     "preview": "vite preview"
   },
   "devDependencies": {
